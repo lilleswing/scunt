@@ -5,9 +5,9 @@ defaultName: Stranger
 database:
   # the name of your JDBC driver
   driverClass: org.h2.Driver
-  user: sa
-  password: sa
-  url: jdbc:h2:~/example.db
+  user: postgres
+  password: postgres
+  url: jdbc:postgresql://localhost:3247/scunt
 
 # use the simple server factory if you only want to run on a single port
 #server:
