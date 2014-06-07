@@ -1,7 +1,7 @@
 package com.lilleswing.scunt;
 
-import com.lilleswing.scunt.core.model.user.User;
-import com.lilleswing.scunt.core.model.user.UserDAO;
+import com.lilleswing.scunt.core.User;
+import com.lilleswing.scunt.db.UserDAO;
 import com.lilleswing.scunt.health.TemplateHealthCheck;
 import com.lilleswing.scunt.resources.HelloWorldResource;
 import com.lilleswing.scunt.resources.UserResource;
@@ -11,6 +11,10 @@ import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
+
+import javax.servlet.DispatcherType;
+import java.util.EnumSet;
 
 public class ScuntApplication extends Application<ScuntConfiguration> {
     public static void main(String[] args) throws Exception {
@@ -43,6 +47,9 @@ public class ScuntApplication extends Application<ScuntConfiguration> {
     @Override
     public void run(ScuntConfiguration configuration,
                     Environment environment) {
+        environment.servlets().addFilter("Cross-Origin-Filter", new CrossOriginFilter())
+                .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+
         final UserDAO userDAO = new UserDAO(hibernate.getSessionFactory());
         final HelloWorldResource helloWorldResource = new HelloWorldResource(
                 configuration.getTemplate(),

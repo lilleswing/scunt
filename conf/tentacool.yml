@@ -4,7 +4,7 @@ defaultName: Stranger
 # Database settings.
 database:
   # the name of your JDBC driver
-  driverClass: org.h2.Driver
+  driverClass: org.postgresql.Driver
   user: postgres
   password: postgres
   url: jdbc:postgresql://localhost:3247/scunt

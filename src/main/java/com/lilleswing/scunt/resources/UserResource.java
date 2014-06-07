@@ -1,19 +1,18 @@
 package com.lilleswing.scunt.resources;
 
 import com.codahale.metrics.annotation.Timed;
-import com.lilleswing.scunt.core.Saying;
-import com.lilleswing.scunt.core.model.user.User;
-import com.lilleswing.scunt.core.model.user.UserDAO;
+import com.lilleswing.scunt.core.User;
+import com.lilleswing.scunt.db.UserDAO;
 import io.dropwizard.hibernate.UnitOfWork;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/user")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
 
     private final UserDAO userDAO;
@@ -30,14 +29,25 @@ public class UserResource {
     }
 
     @GET
-    @Path("/create")
+    @Path("/{userId}")
     @Timed
     @UnitOfWork
-    public User get() {
-        final User user = new User();
-        user.setEmail("lilleswing@gmail.com");
-        user.setPassword("NaClH2O");
-        user.setUsername("lilleswing");
+    public User get(@PathParam("userId") long userId) {
+        final User user = userDAO.getById(userId);
+        if( user == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        return user;
+    }
+
+    @POST
+    @Timed
+    @UnitOfWork
+    public User create(final User user) {
+        final boolean exists = userDAO.exists(user.getUsername());
+        if(exists) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
         userDAO.create(user);
         return user;
     }

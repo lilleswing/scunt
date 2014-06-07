@@ -1,14 +1,17 @@
-package com.lilleswing.scunt.core.model.user;
+package com.lilleswing.scunt.core;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement
 @Entity
-@Table(name="user")
+@Table(name="scunt_user")
 public class User {
 
     @Id
-    @GeneratedValue
     @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "scunt_user_id_seq")
+    @SequenceGenerator(name = "scunt_user_id_seq", sequenceName = "scunt_user_id_seq", allocationSize = 1)
     public long id;
 
     @Column(name="username")
