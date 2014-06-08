@@ -1,5 +1,7 @@
 package com.lilleswing.scunt.db;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.lilleswing.scunt.core.User;
 import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.Criteria;
@@ -8,8 +10,10 @@ import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 
+@Singleton
 public class UserDAO extends AbstractDAO<User> {
 
+    @Inject
     public UserDAO(final SessionFactory sessionFactory) {
         super(sessionFactory);
     }

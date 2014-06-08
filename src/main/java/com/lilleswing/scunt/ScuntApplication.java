@@ -1,5 +1,7 @@
 package com.lilleswing.scunt;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.lilleswing.scunt.core.User;
 import com.lilleswing.scunt.db.UserDAO;
 import com.lilleswing.scunt.health.TemplateHealthCheck;
@@ -47,20 +49,23 @@ public class ScuntApplication extends Application<ScuntConfiguration> {
     @Override
     public void run(ScuntConfiguration configuration,
                     Environment environment) {
+        final Injector injector = Guice.createInjector(new ServerGuiceModule(hibernate.getSessionFactory()));
+
+        // Servlets
         environment.servlets().addFilter("Cross-Origin-Filter", new CrossOriginFilter())
                 .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
 
-        final UserDAO userDAO = new UserDAO(hibernate.getSessionFactory());
+        // Resources
         final HelloWorldResource helloWorldResource = new HelloWorldResource(
                 configuration.getTemplate(),
                 configuration.getDefaultName()
         );
         environment.jersey().register(helloWorldResource);
 
-
-        final UserResource userResource = new UserResource(userDAO);
+        final UserResource userResource = injector.getInstance(UserResource.class);
         environment.jersey().register(userResource);
 
+        // Health Checks
         final TemplateHealthCheck healthCheck =
                 new TemplateHealthCheck(configuration.getTemplate());
         environment.healthChecks().register("template", healthCheck);

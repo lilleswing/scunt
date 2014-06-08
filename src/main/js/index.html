@@ -59,7 +59,7 @@
     <script>
 
         $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
-            options.url = 'http://localhost:8080' + options.url;
+            options.url = 'http://localhost:8080/api' + options.url;
         });
 
         $.fn.serializeObject = function() {

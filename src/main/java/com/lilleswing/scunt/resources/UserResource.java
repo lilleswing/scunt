@@ -1,6 +1,8 @@
 package com.lilleswing.scunt.resources;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.lilleswing.scunt.core.User;
 import com.lilleswing.scunt.db.UserDAO;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -13,10 +15,12 @@ import java.util.List;
 @Path("/user")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Singleton
 public class UserResource {
 
     private final UserDAO userDAO;
 
+    @Inject
     public UserResource(final UserDAO userDAO) {
         this.userDAO = userDAO;
     }
