@@ -15,7 +15,6 @@ import java.util.List;
 @Path("/user")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Singleton
 public class UserResource {
 
     private final UserDAO userDAO;

@@ -8,7 +8,7 @@
 
     <changeSet id="1" author="leswing">
         <createTable tableName="scunt_user">
-            <column name="id" type="bigint" autoIncrement="true" incrementBy="50">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="username" type="varchar(255)">
@@ -23,13 +23,38 @@
         </createTable>
     </changeSet>
     <changeSet id="2" author="leswing">
-        <addUniqueConstraint catalogName="cat"
-                             columnNames="username"
+        <addUniqueConstraint columnNames="username"
                              constraintName="const_username"
                              deferrable="true"
                              disabled="true"
                              initiallyDeferred="true"
                              schemaName="public"
                              tableName="scunt_user"/>
+    </changeSet>
+    <changeSet id="3" author="leswing">
+        <createTable tableName="scunt_group">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="4" author="leswing">
+        <addColumn tableName="scunt_user">
+            <column name="group_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="scunt_user"
+                                 baseColumnNames="group_id"
+                                 constraintName="user_group_fk"
+                                 referencedTableName="scunt_group"
+                                 referencedColumnNames="id"
+                                 />
     </changeSet>
 </databaseChangeLog>

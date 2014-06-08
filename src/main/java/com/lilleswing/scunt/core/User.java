@@ -3,10 +3,9 @@ package com.lilleswing.scunt.core;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
 @Entity
 @Table(name="scunt_user")
-public class User {
+public class User implements DbModel {
 
     @Id
     @Column(name="id")
@@ -22,6 +21,10 @@ public class User {
 
     @Column(name="password")
     public String password;
+
+    @JoinColumn(name="group_id")
+    @ManyToOne(targetEntity = Group.class, cascade = CascadeType.ALL)
+    public Group group;
 
     public User() {
 
@@ -57,5 +60,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 }

@@ -40,4 +40,8 @@ public class UserDAO extends AbstractDAO<User> {
         }
         return true;
     }
+
+    public User updateUser(final User user) {
+        return this.persist(user);
+    }
 }

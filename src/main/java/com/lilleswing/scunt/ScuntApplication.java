@@ -2,9 +2,11 @@ package com.lilleswing.scunt;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.lilleswing.scunt.core.Group;
 import com.lilleswing.scunt.core.User;
 import com.lilleswing.scunt.db.UserDAO;
 import com.lilleswing.scunt.health.TemplateHealthCheck;
+import com.lilleswing.scunt.resources.GroupResource;
 import com.lilleswing.scunt.resources.HelloWorldResource;
 import com.lilleswing.scunt.resources.UserResource;
 import io.dropwizard.Application;
@@ -23,7 +25,7 @@ public class ScuntApplication extends Application<ScuntConfiguration> {
         new ScuntApplication().run(args);
     }
 
-    private final HibernateBundle<ScuntConfiguration> hibernate = new HibernateBundle<ScuntConfiguration>(User.class) {
+    private final HibernateBundle<ScuntConfiguration> hibernate = new HibernateBundle<ScuntConfiguration>(User.class, Group.class) {
         @Override
         public DataSourceFactory getDataSourceFactory(final ScuntConfiguration configuration) {
             return configuration.getDataSourceFactory();
@@ -64,6 +66,9 @@ public class ScuntApplication extends Application<ScuntConfiguration> {
 
         final UserResource userResource = injector.getInstance(UserResource.class);
         environment.jersey().register(userResource);
+
+        final GroupResource groupResource = injector.getInstance(GroupResource.class);
+        environment.jersey().register(groupResource);
 
         // Health Checks
         final TemplateHealthCheck healthCheck =
