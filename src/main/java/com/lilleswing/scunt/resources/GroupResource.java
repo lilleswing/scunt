@@ -12,6 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Map;
 
 @Path("/group")
 @Produces(MediaType.APPLICATION_JSON)
@@ -60,14 +61,19 @@ public class GroupResource {
     @Timed
     @UnitOfWork
     public Group addUser(@PathParam("groupId") long groupId,
-                        @PathParam("userId") long userId) {
+                        @PathParam("userId") long userId,
+                        final Map<String, String> params) {
         final Group group = groupDAO.getById(groupId);
+        final String password = params.get("password");
         if( group == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         final User user = userDAO.getById(userId);
         if( user == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        if(!password.equals(group.getPassword())) {
+            throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
         user.setGroup(group);
         group.getUsers().add(user);
