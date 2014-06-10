@@ -4,12 +4,12 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.lilleswing.scunt.core.Group;
 import com.lilleswing.scunt.core.User;
-import com.lilleswing.scunt.db.UserDAO;
 import com.lilleswing.scunt.health.TemplateHealthCheck;
 import com.lilleswing.scunt.resources.GroupResource;
 import com.lilleswing.scunt.resources.HelloWorldResource;
 import com.lilleswing.scunt.resources.UserResource;
 import io.dropwizard.Application;
+import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.migrations.MigrationsBundle;
@@ -40,6 +40,7 @@ public class ScuntApplication extends Application<ScuntConfiguration> {
     @Override
     public void initialize(Bootstrap<ScuntConfiguration> bootstrap) {
         bootstrap.addBundle(hibernate);
+        bootstrap.addBundle(new AssetsBundle("/assets/", "/"));
         bootstrap.addBundle(new MigrationsBundle<ScuntConfiguration>() {
             @Override
             public DataSourceFactory getDataSourceFactory(ScuntConfiguration configuration) {
@@ -52,6 +53,7 @@ public class ScuntApplication extends Application<ScuntConfiguration> {
     public void run(ScuntConfiguration configuration,
                     Environment environment) {
         final Injector injector = Guice.createInjector(new ServerGuiceModule(hibernate.getSessionFactory()));
+        environment.jersey().setUrlPattern("/api/*");
 
         // Servlets
         environment.servlets().addFilter("Cross-Origin-Filter", new CrossOriginFilter())
