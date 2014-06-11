@@ -2,7 +2,6 @@ package com.lilleswing.scunt.core;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.StringSerializer;
 import com.google.common.collect.Sets;
 import com.lilleswing.scunt.core.util.IdSerializer;
 
@@ -25,10 +24,10 @@ public class Group implements DbModel {
     @Column(name="password")
     public String password;
 
-    @OneToMany(targetEntity = User.class, cascade = CascadeType.ALL, mappedBy = "group")
+    @OneToMany(targetEntity = AuthUser.class, cascade = CascadeType.ALL, mappedBy = "group")
     @JsonSerialize(using = IdSerializer.class)
-    @JsonProperty(value = "users")
-    public Set<User> users = Sets.newHashSet();
+    @JsonProperty(value = "authUsers")
+    public Set<AuthUser> authUsers = Sets.newHashSet();
 
     public Group() {
 
@@ -58,11 +57,11 @@ public class Group implements DbModel {
         this.password = password;
     }
 
-    public Set<User> getUsers() {
-        return users;
+    public Set<AuthUser> getAuthUsers() {
+        return authUsers;
     }
 
-    public void setUsers(Set<User> users) {
-        this.users = users;
+    public void setAuthUsers(Set<AuthUser> authUsers) {
+        this.authUsers = authUsers;
     }
 }

@@ -6,7 +6,7 @@ defaultName: Stranger
 database:
   # the name of your JDBC driver
   driverClass: org.postgresql.Driver
-  user: leswing
+  authUser: leswing
   password:
   url: jdbc:postgresql://localhost:5432/scunt
 
@@ -57,7 +57,6 @@ logging:
 
     # Sets the level for 'com.lilleswing.scunt' to DEBUG.
     com.lilleswing.scunt: DEBUG
-
     org.hibernate.SQL: ALL
 
   appenders:

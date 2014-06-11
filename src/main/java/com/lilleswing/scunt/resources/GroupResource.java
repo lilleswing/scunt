@@ -2,10 +2,10 @@ package com.lilleswing.scunt.resources;
 
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
+import com.lilleswing.scunt.core.AppUser;
 import com.lilleswing.scunt.core.Group;
-import com.lilleswing.scunt.core.User;
 import com.lilleswing.scunt.db.GroupDAO;
-import com.lilleswing.scunt.db.UserDAO;
+import com.lilleswing.scunt.db.AuthUserDAO;
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.*;
@@ -20,13 +20,13 @@ import java.util.Map;
 public class GroupResource {
 
     private final GroupDAO groupDAO;
-    private final UserDAO userDAO;
+    private final AuthUserDAO authUserDAO;
 
     @Inject
     public GroupResource(final GroupDAO groupDAO,
-                         final UserDAO userDAO) {
+                         final AuthUserDAO authUserDAO) {
         this.groupDAO = groupDAO;
-        this.userDAO = userDAO;
+        this.authUserDAO = authUserDAO;
     }
 
     @GET
@@ -68,16 +68,16 @@ public class GroupResource {
         if( group == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        final User user = userDAO.getById(userId);
-        if( user == null) {
+        final AppUser appUser = appUserDAO.getById(userId);
+        if( appUser == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         if(!password.equals(group.getPassword())) {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
-        user.setGroup(group);
-        group.getUsers().add(user);
-        userDAO.updateUser(user);
+        appUser.setGroup(group);
+        group.getAuthUsers().add(appUser);
+        authUserDAO.updateUser(appUser);
         return group;
     }
 }

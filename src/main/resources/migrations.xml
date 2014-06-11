@@ -7,7 +7,7 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
 
     <changeSet id="1" author="leswing">
-        <createTable tableName="scunt_user">
+        <createTable tableName="auth_user">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -21,17 +21,28 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-    </changeSet>
-    <changeSet id="2" author="leswing">
         <addUniqueConstraint columnNames="username"
                              constraintName="const_username"
                              deferrable="true"
                              disabled="true"
                              initiallyDeferred="true"
                              schemaName="public"
-                             tableName="scunt_user"/>
+                             tableName="app_user"/>
+        <createTable tableName="app_user">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="auth_user_id">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="app_user"
+                                 baseColumnNames="auth_user_id"
+                                 constraintName="auth_app_user_fk"
+                                 referencedTableName="auth_user"
+                                 referencedColumnNames="id"/>
     </changeSet>
-    <changeSet id="3" author="leswing">
+    <changeSet id="2" author="leswing">
         <createTable tableName="scunt_group">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -43,14 +54,13 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-    </changeSet>
-    <changeSet id="4" author="leswing">
-        <addColumn tableName="scunt_user">
+
+        <addColumn tableName="app_user">
             <column name="group_id" type="bigint">
                 <constraints nullable="true"/>
             </column>
         </addColumn>
-        <addForeignKeyConstraint baseTableName="scunt_user"
+        <addForeignKeyConstraint baseTableName="app_user"
                                  baseColumnNames="group_id"
                                  constraintName="user_group_fk"
                                  referencedTableName="scunt_group"

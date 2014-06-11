@@ -4,13 +4,13 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
-@Table(name="scunt_user")
-public class User implements DbModel {
+@Table(name="auth_user")
+public class AuthUser implements DbModel {
 
     @Id
     @Column(name="id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "scunt_user_id_seq")
-    @SequenceGenerator(name = "scunt_user_id_seq", sequenceName = "scunt_user_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "auth_user_id_seq")
+    @SequenceGenerator(name = "auth_user_id_seq", sequenceName = "auth_user_id_seq", allocationSize = 1)
     public long id;
 
     @Column(name="username")
@@ -22,11 +22,11 @@ public class User implements DbModel {
     @Column(name="password")
     public String password;
 
-    @JoinColumn(name="group_id")
-    @ManyToOne(targetEntity = Group.class, cascade = CascadeType.ALL)
-    public Group group;
+    @JoinColumn(name="auth_user_id")
+    @OneToOne(targetEntity = AppUser.class, cascade = CascadeType.ALL)
+    public AppUser appUser;
 
-    public User() {
+    public AuthUser() {
 
     }
 
@@ -60,13 +60,5 @@ public class User implements DbModel {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-
-    public void setGroup(Group group) {
-        this.group = group;
     }
 }

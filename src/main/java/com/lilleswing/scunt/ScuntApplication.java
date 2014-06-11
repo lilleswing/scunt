@@ -2,8 +2,8 @@ package com.lilleswing.scunt;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.lilleswing.scunt.core.AuthUser;
 import com.lilleswing.scunt.core.Group;
-import com.lilleswing.scunt.core.User;
 import com.lilleswing.scunt.health.TemplateHealthCheck;
 import com.lilleswing.scunt.resources.GroupResource;
 import com.lilleswing.scunt.resources.HelloWorldResource;
@@ -25,7 +25,7 @@ public class ScuntApplication extends Application<ScuntConfiguration> {
         new ScuntApplication().run(args);
     }
 
-    private final HibernateBundle<ScuntConfiguration> hibernate = new HibernateBundle<ScuntConfiguration>(User.class, Group.class) {
+    private final HibernateBundle<ScuntConfiguration> hibernate = new HibernateBundle<ScuntConfiguration>(AuthUser.class, Group.class) {
         @Override
         public DataSourceFactory getDataSourceFactory(final ScuntConfiguration configuration) {
             return configuration.getDataSourceFactory();

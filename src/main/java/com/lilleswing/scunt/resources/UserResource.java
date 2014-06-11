@@ -2,9 +2,9 @@ package com.lilleswing.scunt.resources;
 
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.lilleswing.scunt.core.User;
-import com.lilleswing.scunt.db.UserDAO;
+import com.lilleswing.scunt.core.AppUser;
+import com.lilleswing.scunt.core.AuthUser;
+import com.lilleswing.scunt.db.AuthUserDAO;
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.*;
@@ -17,41 +17,44 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
 
-    private final UserDAO userDAO;
+    private final AuthUserDAO authUserDAO;
 
     @Inject
-    public UserResource(final UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public UserResource(final AuthUserDAO authUserDAO) {
+        this.authUserDAO = authUserDAO;
     }
 
     @GET
     @Timed
     @UnitOfWork
-    public List<User> list() {
-        return userDAO.list();
+    public List<AuthUser> list() {
+        return authUserDAO.list();
     }
 
     @GET
     @Path("/{userId}")
     @Timed
     @UnitOfWork
-    public User get(@PathParam("userId") long userId) {
-        final User user = userDAO.getById(userId);
-        if( user == null) {
+    public AuthUser get(@PathParam("userId") long userId) {
+        final AuthUser authUser = authUserDAO.getById(userId);
+        if( authUser == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        return user;
+        return authUser;
     }
 
     @POST
     @Timed
     @UnitOfWork
-    public User create(final User user) {
-        final boolean exists = userDAO.exists(user.getUsername());
+    public AuthUser create(final AuthUser authUser) {
+        final boolean exists = authUserDAO.exists(authUser.getUsername());
         if(exists) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
-        userDAO.create(user);
-        return user;
+        authUserDAO.create(authUser);
+        AppUser appUser = new AppUser();
+        appUser.setAuthUser(authUser);
+        appUserDao.create(appUser);
+        return authUser;
     }
 }
