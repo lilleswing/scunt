@@ -8,7 +8,6 @@ import com.lilleswing.scunt.filter.SecurityFilter;
 import com.lilleswing.scunt.health.TemplateHealthCheck;
 import com.lilleswing.scunt.resources.AuthUserResource;
 import com.lilleswing.scunt.resources.GroupResource;
-import com.lilleswing.scunt.resources.HelloWorldResource;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.db.DataSourceFactory;
@@ -63,12 +62,6 @@ public class ScuntApplication extends Application<ScuntConfiguration> {
                 .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/api/*");
 
         // Resources
-        final HelloWorldResource helloWorldResource = new HelloWorldResource(
-                configuration.getTemplate(),
-                configuration.getDefaultName()
-        );
-        environment.jersey().register(helloWorldResource);
-
         final AuthUserResource authUserResource = injector.getInstance(AuthUserResource.class);
         environment.jersey().register(authUserResource);
 
