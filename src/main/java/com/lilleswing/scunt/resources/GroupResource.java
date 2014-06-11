@@ -4,8 +4,8 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
 import com.lilleswing.scunt.core.AppUser;
 import com.lilleswing.scunt.core.Group;
+import com.lilleswing.scunt.db.AppUserDAO;
 import com.lilleswing.scunt.db.GroupDAO;
-import com.lilleswing.scunt.db.AuthUserDAO;
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.*;
@@ -20,13 +20,13 @@ import java.util.Map;
 public class GroupResource {
 
     private final GroupDAO groupDAO;
-    private final AuthUserDAO authUserDAO;
+    private final AppUserDAO appUserDAO;
 
     @Inject
     public GroupResource(final GroupDAO groupDAO,
-                         final AuthUserDAO authUserDAO) {
+                         final AppUserDAO appUserDAO) {
         this.groupDAO = groupDAO;
-        this.authUserDAO = authUserDAO;
+        this.appUserDAO = appUserDAO;
     }
 
     @GET
@@ -76,8 +76,8 @@ public class GroupResource {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
         appUser.setGroup(group);
-        group.getAuthUsers().add(appUser);
-        authUserDAO.updateUser(appUser);
+        group.getAppUsers().add(appUser);
+        appUserDAO.updateUser(appUser);
         return group;
     }
 }

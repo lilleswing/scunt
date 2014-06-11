@@ -24,10 +24,10 @@ public class Group implements DbModel {
     @Column(name="password")
     public String password;
 
-    @OneToMany(targetEntity = AuthUser.class, cascade = CascadeType.ALL, mappedBy = "group")
+    @OneToMany(targetEntity = AppUser.class, cascade = CascadeType.ALL, mappedBy = "group")
     @JsonSerialize(using = IdSerializer.class)
-    @JsonProperty(value = "authUsers")
-    public Set<AuthUser> authUsers = Sets.newHashSet();
+    @JsonProperty(value = "users")
+    public Set<AppUser> appUsers = Sets.newHashSet();
 
     public Group() {
 
@@ -57,11 +57,11 @@ public class Group implements DbModel {
         this.password = password;
     }
 
-    public Set<AuthUser> getAuthUsers() {
-        return authUsers;
+    public Set<AppUser> getAppUsers() {
+        return appUsers;
     }
 
-    public void setAuthUsers(Set<AuthUser> authUsers) {
-        this.authUsers = authUsers;
+    public void setAppUsers(Set<AppUser> appUsers) {
+        this.appUsers = appUsers;
     }
 }

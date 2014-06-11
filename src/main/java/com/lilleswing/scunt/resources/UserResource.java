@@ -2,7 +2,6 @@ package com.lilleswing.scunt.resources;
 
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
-import com.lilleswing.scunt.core.AppUser;
 import com.lilleswing.scunt.core.AuthUser;
 import com.lilleswing.scunt.db.AuthUserDAO;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -12,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/user")
+@Path("/auth_user")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
@@ -52,9 +51,6 @@ public class UserResource {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         authUserDAO.create(authUser);
-        AppUser appUser = new AppUser();
-        appUser.setAuthUser(authUser);
-        appUserDao.create(appUser);
         return authUser;
     }
 }

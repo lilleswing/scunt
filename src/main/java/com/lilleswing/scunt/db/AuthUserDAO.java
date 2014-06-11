@@ -2,6 +2,7 @@ package com.lilleswing.scunt.db;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.lilleswing.scunt.core.AppUser;
 import com.lilleswing.scunt.core.AuthUser;
 import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.Criteria;
@@ -28,6 +29,8 @@ public class AuthUserDAO extends AbstractDAO<AuthUser> {
     }
 
     public long create(AuthUser authUser) {
+        AppUser appUser = new AppUser();
+        appUser.setAuthUser(authUser);
         return persist(authUser).getId();
     }
 
