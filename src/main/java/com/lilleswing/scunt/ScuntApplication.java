@@ -5,9 +5,9 @@ import com.google.inject.Injector;
 import com.lilleswing.scunt.core.AuthUser;
 import com.lilleswing.scunt.core.Group;
 import com.lilleswing.scunt.health.TemplateHealthCheck;
+import com.lilleswing.scunt.resources.AuthUserResource;
 import com.lilleswing.scunt.resources.GroupResource;
 import com.lilleswing.scunt.resources.HelloWorldResource;
-import com.lilleswing.scunt.resources.UserResource;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.db.DataSourceFactory;
@@ -66,8 +66,8 @@ public class ScuntApplication extends Application<ScuntConfiguration> {
         );
         environment.jersey().register(helloWorldResource);
 
-        final UserResource userResource = injector.getInstance(UserResource.class);
-        environment.jersey().register(userResource);
+        final AuthUserResource authUserResource = injector.getInstance(AuthUserResource.class);
+        environment.jersey().register(authUserResource);
 
         final GroupResource groupResource = injector.getInstance(GroupResource.class);
         environment.jersey().register(groupResource);

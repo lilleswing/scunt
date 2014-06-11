@@ -43,8 +43,4 @@ public class AuthUserDAO extends AbstractDAO<AuthUser> {
         }
         return true;
     }
-
-    public AuthUser updateUser(final AuthUser authUser) {
-        return this.persist(authUser);
-    }
 }

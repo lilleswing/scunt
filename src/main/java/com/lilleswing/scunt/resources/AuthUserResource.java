@@ -14,12 +14,12 @@ import java.util.List;
 @Path("/auth_user")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class UserResource {
+public class AuthUserResource {
 
     private final AuthUserDAO authUserDAO;
 
     @Inject
-    public UserResource(final AuthUserDAO authUserDAO) {
+    public AuthUserResource(final AuthUserDAO authUserDAO) {
         this.authUserDAO = authUserDAO;
     }
 
