@@ -2,6 +2,7 @@ package com.lilleswing.scunt.filter;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.Singleton;
 import com.lilleswing.scunt.core.AuthUser;
 import com.lilleswing.scunt.db.AuthUserDAO;
 
@@ -9,6 +10,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+@Singleton
 public class SecurityFilter implements Filter {
 
     private final Provider<ScuntContext> scuntContextProvider;

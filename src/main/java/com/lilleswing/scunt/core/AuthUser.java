@@ -1,7 +1,6 @@
 package com.lilleswing.scunt.core;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name="auth_user")
@@ -25,7 +24,6 @@ public class AuthUser implements DbModel {
     @Column(name="access_token")
     public String accessToken;
 
-    @JoinColumn(name="auth_user_id")
     @OneToOne(targetEntity = AppUser.class, cascade = CascadeType.ALL, mappedBy = "authUser")
     public AppUser appUser;
 

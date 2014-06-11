@@ -2,6 +2,9 @@ package com.lilleswing.scunt;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.servlet.GuiceFilter;
+import com.google.inject.servlet.ServletModule;
+import com.lilleswing.scunt.core.AppUser;
 import com.lilleswing.scunt.core.AuthUser;
 import com.lilleswing.scunt.core.Group;
 import com.lilleswing.scunt.filter.SecurityFilter;
@@ -21,16 +24,12 @@ import javax.servlet.DispatcherType;
 import java.util.EnumSet;
 
 public class ScuntApplication extends Application<ScuntConfiguration> {
+
+    private Injector injector;
+
     public static void main(String[] args) throws Exception {
         new ScuntApplication().run(args);
     }
-
-    private final HibernateBundle<ScuntConfiguration> hibernate = new HibernateBundle<ScuntConfiguration>(AuthUser.class, Group.class) {
-        @Override
-        public DataSourceFactory getDataSourceFactory(final ScuntConfiguration configuration) {
-            return configuration.getDataSourceFactory();
-        }
-    };
 
     @Override
     public String getName() {
@@ -39,7 +38,8 @@ public class ScuntApplication extends Application<ScuntConfiguration> {
 
     @Override
     public void initialize(Bootstrap<ScuntConfiguration> bootstrap) {
-        bootstrap.addBundle(hibernate);
+        injector = Guice.createInjector(new ServletModule(), new ServerGuiceModule());
+        bootstrap.addBundle(injector.getInstance(HibernateBundle.class));
         bootstrap.addBundle(new AssetsBundle("/assets/", "/"));
         bootstrap.addBundle(new MigrationsBundle<ScuntConfiguration>() {
             @Override
@@ -52,12 +52,13 @@ public class ScuntApplication extends Application<ScuntConfiguration> {
     @Override
     public void run(ScuntConfiguration configuration,
                     Environment environment) {
-        final Injector injector = Guice.createInjector(new ServerGuiceModule(hibernate.getSessionFactory()));
         environment.jersey().setUrlPattern("/api/*");
 
         // Servlets
         environment.servlets().addFilter("Cross-Origin-Filter", injector.getInstance(CrossOriginFilter.class))
                 .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+        environment.servlets().addFilter("Guice-Filter", injector.getInstance(GuiceFilter.class))
+                .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/api/*");
         environment.servlets().addFilter("Security-Filter", injector.getInstance(SecurityFilter.class))
                 .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/api/*");
 

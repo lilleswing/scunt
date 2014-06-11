@@ -39,4 +39,12 @@ public class AppUser {
     public void setGroup(Group group) {
         this.group = group;
     }
+
+    public AuthUser getAuthUser() {
+        return authUser;
+    }
+
+    public void setAuthUser(AuthUser authUser) {
+        this.authUser = authUser;
+    }
 }
