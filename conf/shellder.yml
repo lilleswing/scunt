@@ -18,7 +18,7 @@ database:
 
 server:
   type: simple
-  applicationContextPath: /api  # Default value*
+  applicationContextPath: /  # Default value*
 
   #softNofileLimit: 1000
   #hardNofileLimit: 1000
@@ -56,7 +56,6 @@ logging:
 
     # Sets the level for 'com.lilleswing.scunt' to DEBUG.
     com.lilleswing.scunt: DEBUG
-
     org.hibernate.SQL: ALL
 
   appenders:
