@@ -30,12 +30,12 @@
                              disabled="true"
                              initiallyDeferred="true"
                              schemaName="public"
-                             tableName="app_user"/>
+                             tableName="auth_user"/>
         <createTable tableName="app_user">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="auth_user_id">
+            <column name="auth_user_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>
