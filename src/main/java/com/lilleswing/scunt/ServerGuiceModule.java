@@ -17,6 +17,10 @@ public class ServerGuiceModule extends AbstractModule {
     public ServerGuiceModule() {
     }
 
+    @Override
+    protected void configure() {
+    }
+
     @Provides
     @Singleton
     SessionFactory providesSessionFactory(final Injector injector) {
@@ -27,7 +31,7 @@ public class ServerGuiceModule extends AbstractModule {
     @Provides
     @Singleton
     HibernateBundle providesHibernateBundle() {
-        return new HibernateBundle<ScuntConfiguration>(
+        return new HibernateBundle<ScuntConfiguration>( //All Hibernate Classes
                 AuthUser.class,
                 AppUser.class,
                 Group.class) {
@@ -36,9 +40,5 @@ public class ServerGuiceModule extends AbstractModule {
                 return configuration.getDataSourceFactory();
             }
         };
-    }
-
-    @Override
-    protected void configure() {
     }
 }
