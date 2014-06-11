@@ -20,6 +20,9 @@
             <column name="password" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="access_token" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
         </createTable>
         <addUniqueConstraint columnNames="username"
                              constraintName="const_username"

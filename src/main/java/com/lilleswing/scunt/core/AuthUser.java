@@ -22,6 +22,9 @@ public class AuthUser implements DbModel {
     @Column(name="password")
     public String password;
 
+    @Column(name="access_token")
+    public String accessToken;
+
     @JoinColumn(name="auth_user_id")
     @OneToOne(targetEntity = AppUser.class, cascade = CascadeType.ALL, mappedBy = "authUser")
     public AppUser appUser;
@@ -68,5 +71,13 @@ public class AuthUser implements DbModel {
 
     public void setAppUser(AppUser appUser) {
         this.appUser = appUser;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 }

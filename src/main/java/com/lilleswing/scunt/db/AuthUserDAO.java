@@ -9,14 +9,19 @@ import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.List;
 
 @Singleton
 public class AuthUserDAO extends AbstractDAO<AuthUser> {
 
+    private final SecureRandom secureRandom;
+
     @Inject
     public AuthUserDAO(final SessionFactory sessionFactory) {
         super(sessionFactory);
+        this.secureRandom = new SecureRandom();
     }
 
     public List<AuthUser> list() {
@@ -30,7 +35,8 @@ public class AuthUserDAO extends AbstractDAO<AuthUser> {
 
     public long create(AuthUser authUser) {
         AppUser appUser = new AppUser();
-        appUser.setAuthUser(authUser);
+        authUser.setAppUser(appUser);
+        authUser.setAccessToken(new BigInteger(130, secureRandom).toString(32));
         return persist(authUser).getId();
     }
 
@@ -42,5 +48,11 @@ public class AuthUserDAO extends AbstractDAO<AuthUser> {
             return false;
         }
         return true;
+    }
+
+    public AuthUser authorize(String accessToken) {
+        final Criteria criteria = currentSession().createCriteria(AuthUser.class);
+        criteria.add(Restrictions.eq("accessToken", accessToken));
+        return (AuthUser) criteria.uniqueResult();
     }
 }

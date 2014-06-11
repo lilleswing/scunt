@@ -4,6 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.lilleswing.scunt.core.AuthUser;
 import com.lilleswing.scunt.core.Group;
+import com.lilleswing.scunt.filter.SecurityFilter;
 import com.lilleswing.scunt.health.TemplateHealthCheck;
 import com.lilleswing.scunt.resources.AuthUserResource;
 import com.lilleswing.scunt.resources.GroupResource;
@@ -56,8 +57,10 @@ public class ScuntApplication extends Application<ScuntConfiguration> {
         environment.jersey().setUrlPattern("/api/*");
 
         // Servlets
-        environment.servlets().addFilter("Cross-Origin-Filter", new CrossOriginFilter())
+        environment.servlets().addFilter("Cross-Origin-Filter", injector.getInstance(CrossOriginFilter.class))
                 .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+        environment.servlets().addFilter("Security-Filter", injector.getInstance(SecurityFilter.class))
+                .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/api/*");
 
         // Resources
         final HelloWorldResource helloWorldResource = new HelloWorldResource(
