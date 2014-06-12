@@ -53,11 +53,6 @@ public class AuthUserDAO extends AbstractDAO<AuthUser> {
         return true;
     }
 
-    /**
-     * Hack because can't get dropwizard to do session per request YET
-     * @param accessToken
-     * @return
-     */
     public AppUser authorize(String accessToken) {
         final Criteria criteria = criteria();
         criteria.add(Restrictions.eq("accessToken", accessToken));
