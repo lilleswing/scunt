@@ -19,12 +19,10 @@ import java.util.List;
 public class AuthUserDAO extends AbstractDAO<AuthUser> {
 
     private final SecureRandom secureRandom;
-    private final SessionFactory sessionFactory;
 
     @Inject
     public AuthUserDAO(final SessionFactory sessionFactory) {
         super(sessionFactory);
-        this.sessionFactory = sessionFactory;
         this.secureRandom = new SecureRandom();
     }
 
@@ -61,18 +59,13 @@ public class AuthUserDAO extends AbstractDAO<AuthUser> {
      * @return
      */
     public AppUser authorize(String accessToken) {
-        final Session session = sessionFactory.openSession();
-        try {
-            final Criteria criteria = session.createCriteria(AuthUser.class);
-            criteria.add(Restrictions.eq("accessToken", accessToken));
-            final AuthUser authUser = (AuthUser) criteria.uniqueResult();
-            if (authUser == null) {
-                return null;
-            }
-            return new AppUser(authUser.getAppUser());
-        } finally {
-            session.close();
+        final Criteria criteria = criteria();
+        criteria.add(Restrictions.eq("accessToken", accessToken));
+        final AuthUser authUser = (AuthUser) criteria.uniqueResult();
+        if (authUser == null) {
+            return null;
         }
+        return new AppUser(authUser.getAppUser());
     }
 
     public AuthUser login(final AuthUser authUser) {

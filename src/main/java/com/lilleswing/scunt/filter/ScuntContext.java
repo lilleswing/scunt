@@ -22,7 +22,7 @@ public class ScuntContext {
         if(Strings.isNullOrEmpty(accessToken)) {
             return Optional.absent();
         }
-        return Optional.of(authUserDAO.authorize(this.accessToken));
+        return Optional.fromNullable(authUserDAO.authorize(this.accessToken));
     }
 
     public void setAccessToken(final String accessToken) {
