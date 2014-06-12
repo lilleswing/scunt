@@ -26,15 +26,9 @@ public class SecurityFilter implements ContainerRequestFilter {
     @Override
     @UnitOfWork
     public ContainerRequest filter(ContainerRequest containerRequest) {
+        final ScuntContext scuntContext = scuntContextProvider.get();
         final String accessToken = containerRequest.getHeaderValue("Authorization");
-        if(Strings.isNullOrEmpty(accessToken)) {
-            return containerRequest;
-        }
-        final AppUser appUser = authUserDAO.authorize(accessToken);
-        if(appUser != null) {
-            final ScuntContext scuntContext = scuntContextProvider.get();
-            scuntContext.setAppUser(appUser);
-        }
+        scuntContext.setAccessToken(accessToken);
         return containerRequest;
     }
 }

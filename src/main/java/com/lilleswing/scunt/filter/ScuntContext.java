@@ -1,23 +1,31 @@
 package com.lilleswing.scunt.filter;
 
+import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.lilleswing.scunt.core.AppUser;
+import com.lilleswing.scunt.db.AuthUserDAO;
 
 @RequestScoped
 public class ScuntContext {
 
-    private AppUser appUser = null;
+    private final AuthUserDAO authUserDAO;
+    private String accessToken = null;
 
     @Inject
-    public ScuntContext() {
+    public ScuntContext(final AuthUserDAO authUserDAO) {
+        this.authUserDAO = authUserDAO;
     }
 
-    public AppUser getAppUser() {
-        return appUser;
+    public Optional<AppUser> getAppUser() {
+        if(Strings.isNullOrEmpty(accessToken)) {
+            return Optional.absent();
+        }
+        return Optional.of(authUserDAO.authorize(this.accessToken));
     }
 
-    public void setAppUser(AppUser appUser) {
-        this.appUser = appUser;
+    public void setAccessToken(final String accessToken) {
+        this.accessToken = accessToken;
     }
 }

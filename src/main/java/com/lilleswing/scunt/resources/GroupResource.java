@@ -68,6 +68,10 @@ public class GroupResource {
     public Group addUser(@PathParam("groupId") long groupId,
                          @PathParam("userId") long userId,
                          final Map<String, String> params) {
+        final ScuntContext scuntContext = scuntContextProvider.get();
+        if(!scuntContext.getAppUser().isPresent()) {
+            throw new WebApplicationException(Response.Status.FORBIDDEN);
+        }
         final Group group = groupDAO.getById(groupId);
         final String password = params.get("password");
         if (group == null) {
@@ -78,7 +82,7 @@ public class GroupResource {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         if (!password.equals(group.getPassword()) ||
-                scuntContextProvider.get().getAppUser().getId() != appUser.getId()) {
+                scuntContext.getAppUser().get().getId() != appUser.getId()) {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
         appUser.setGroup(group);
