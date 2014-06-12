@@ -7,14 +7,19 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.lilleswing.scunt.core.DbModel;
 
 import java.io.IOException;
+import java.util.Collection;
 
-public class IdSerializer extends JsonSerializer<DbModel> {
+public class IdCollectionSerializer extends JsonSerializer<Collection<DbModel>> {
     @Override
-    public void serialize(DbModel dbModel,
+    public void serialize(Collection<DbModel> dbModels,
                           JsonGenerator jsonGenerator,
                           SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
-        jsonGenerator.writeStartObject();
-        jsonGenerator.writeNumberField("id", dbModel.getId());
-        jsonGenerator.writeEndObject();
+        jsonGenerator.writeStartArray();
+        for (final DbModel dbModel : dbModels) {
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeNumberField("id", dbModel.getId());
+            jsonGenerator.writeEndObject();
+        }
+        jsonGenerator.writeEndArray();
     }
 }

@@ -1,10 +1,14 @@
 package com.lilleswing.scunt.core;
 
+
+import com.google.inject.Inject;
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name="app_user")
-public class AppUser {
+public class AppUser implements DbModel {
 
     @Id
     @Column(name="id")
@@ -18,10 +22,15 @@ public class AppUser {
 
     @JoinColumn(name="auth_user_id")
     @OneToOne(targetEntity = AuthUser.class, cascade = CascadeType.ALL)
+    @JsonIgnore
     private AuthUser authUser;
 
     public AppUser() {
+    }
 
+    public AppUser(final AppUser o) {
+        this.id = o.getId();
+        this.group = o.getGroup();
     }
 
     public long getId() {

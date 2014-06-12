@@ -3,7 +3,7 @@ package com.lilleswing.scunt.core;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.Sets;
-import com.lilleswing.scunt.core.util.IdSerializer;
+import com.lilleswing.scunt.core.util.IdCollectionSerializer;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -25,7 +25,7 @@ public class Group implements DbModel {
     public String password;
 
     @OneToMany(targetEntity = AppUser.class, cascade = CascadeType.ALL, mappedBy = "group")
-    @JsonSerialize(using = IdSerializer.class)
+    @JsonSerialize(using = IdCollectionSerializer.class)
     @JsonProperty(value = "users")
     public Set<AppUser> appUsers = Sets.newHashSet();
 

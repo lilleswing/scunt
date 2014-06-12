@@ -6,7 +6,9 @@ import com.lilleswing.scunt.core.AppUser;
 import com.lilleswing.scunt.core.AuthUser;
 import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
 import java.math.BigInteger;
@@ -17,10 +19,12 @@ import java.util.List;
 public class AuthUserDAO extends AbstractDAO<AuthUser> {
 
     private final SecureRandom secureRandom;
+    private final SessionFactory sessionFactory;
 
     @Inject
     public AuthUserDAO(final SessionFactory sessionFactory) {
         super(sessionFactory);
+        this.sessionFactory = sessionFactory;
         this.secureRandom = new SecureRandom();
     }
 
@@ -36,6 +40,7 @@ public class AuthUserDAO extends AbstractDAO<AuthUser> {
     public long create(AuthUser authUser) {
         AppUser appUser = new AppUser();
         authUser.setAppUser(appUser);
+        appUser.setAuthUser(authUser);
         authUser.setAccessToken(new BigInteger(130, secureRandom).toString(32));
         return persist(authUser).getId();
     }
@@ -50,9 +55,30 @@ public class AuthUserDAO extends AbstractDAO<AuthUser> {
         return true;
     }
 
-    public AuthUser authorize(String accessToken) {
+    /**
+     * Hack because can't get dropwizard to do session per request YET
+     * @param accessToken
+     * @return
+     */
+    public AppUser authorize(String accessToken) {
+        final Session session = sessionFactory.openSession();
+        try {
+            final Criteria criteria = session.createCriteria(AuthUser.class);
+            criteria.add(Restrictions.eq("accessToken", accessToken));
+            final AuthUser authUser = (AuthUser) criteria.uniqueResult();
+            if (authUser == null) {
+                return null;
+            }
+            return new AppUser(authUser.getAppUser());
+        } finally {
+            session.close();
+        }
+    }
+
+    public AuthUser login(final AuthUser authUser) {
         final Criteria criteria = currentSession().createCriteria(AuthUser.class);
-        criteria.add(Restrictions.eq("accessToken", accessToken));
+        criteria.add(Restrictions.eq("username", authUser.getUsername()));
+        criteria.add(Restrictions.eq("password", authUser.getPassword()));
         return (AuthUser) criteria.uniqueResult();
     }
 }

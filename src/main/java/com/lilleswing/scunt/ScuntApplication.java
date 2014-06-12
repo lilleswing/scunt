@@ -4,9 +4,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceFilter;
 import com.google.inject.servlet.ServletModule;
-import com.lilleswing.scunt.core.AppUser;
-import com.lilleswing.scunt.core.AuthUser;
-import com.lilleswing.scunt.core.Group;
 import com.lilleswing.scunt.filter.SecurityFilter;
 import com.lilleswing.scunt.health.TemplateHealthCheck;
 import com.lilleswing.scunt.resources.AuthUserResource;
@@ -59,8 +56,9 @@ public class ScuntApplication extends Application<ScuntConfiguration> {
                 .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
         environment.servlets().addFilter("Guice-Filter", injector.getInstance(GuiceFilter.class))
                 .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/api/*");
-        environment.servlets().addFilter("Security-Filter", injector.getInstance(SecurityFilter.class))
-                .addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/api/*");
+
+        environment.jersey().getResourceConfig().getContainerRequestFilters()
+                .add(injector.getInstance(SecurityFilter.class));
 
         // Resources
         final AuthUserResource authUserResource = injector.getInstance(AuthUserResource.class);

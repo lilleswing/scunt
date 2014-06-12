@@ -3,15 +3,14 @@ package com.lilleswing.scunt.filter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.lilleswing.scunt.core.AuthUser;
+import com.lilleswing.scunt.core.AppUser;
 import com.lilleswing.scunt.db.AuthUserDAO;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import com.sun.jersey.spi.container.ContainerRequest;
+import com.sun.jersey.spi.container.ContainerRequestFilter;
+import io.dropwizard.hibernate.UnitOfWork;
 
 @Singleton
-public class SecurityFilter implements Filter {
+public class SecurityFilter implements ContainerRequestFilter {
 
     private final Provider<ScuntContext> scuntContextProvider;
     private final AuthUserDAO authUserDAO;
@@ -24,27 +23,14 @@ public class SecurityFilter implements Filter {
     }
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-    }
-
-    @Override
-    public void doFilter(final ServletRequest servletRequest,
-                         final ServletResponse servletResponse,
-                         final FilterChain filterChain) throws IOException, ServletException {
-        if(!(servletRequest instanceof HttpServletRequest)) {
-            filterChain.doFilter(servletRequest, servletResponse);
-        }
-        final HttpServletRequest request = (HttpServletRequest) servletRequest;
-        final String accessToken = request.getHeader("Authorization");
-        final AuthUser authUser = authUserDAO.authorize(accessToken);
-        if(authUser != null) {
+    @UnitOfWork
+    public ContainerRequest filter(ContainerRequest containerRequest) {
+        final String accessToken = containerRequest.getHeaderValue("Authorization");
+        final AppUser appUser = authUserDAO.authorize(accessToken);
+        if(appUser != null) {
             final ScuntContext scuntContext = scuntContextProvider.get();
-            scuntContext.setAppUser(authUser.getAppUser());
+            scuntContext.setAppUser(appUser);
         }
-        filterChain.doFilter(servletRequest, servletResponse);
-    }
-
-    @Override
-    public void destroy() {
+        return containerRequest;
     }
 }

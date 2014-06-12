@@ -2,10 +2,12 @@ package com.lilleswing.scunt.resources;
 
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.lilleswing.scunt.core.AppUser;
 import com.lilleswing.scunt.core.Group;
 import com.lilleswing.scunt.db.AppUserDAO;
 import com.lilleswing.scunt.db.GroupDAO;
+import com.lilleswing.scunt.filter.ScuntContext;
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.*;
@@ -19,12 +21,15 @@ import java.util.Map;
 @Consumes(MediaType.APPLICATION_JSON)
 public class GroupResource {
 
+    private final Provider<ScuntContext> scuntContextProvider;
     private final GroupDAO groupDAO;
     private final AppUserDAO appUserDAO;
 
     @Inject
-    public GroupResource(final GroupDAO groupDAO,
+    public GroupResource(final Provider<ScuntContext> scuntContextProvider,
+                         final GroupDAO groupDAO,
                          final AppUserDAO appUserDAO) {
+        this.scuntContextProvider = scuntContextProvider;
         this.groupDAO = groupDAO;
         this.appUserDAO = appUserDAO;
     }
@@ -50,7 +55,7 @@ public class GroupResource {
     @UnitOfWork
     public Group get(@PathParam("groupId") long groupId) {
         final Group group = groupDAO.getById(groupId);
-        if( group == null) {
+        if (group == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         return group;
@@ -61,18 +66,19 @@ public class GroupResource {
     @Timed
     @UnitOfWork
     public Group addUser(@PathParam("groupId") long groupId,
-                        @PathParam("userId") long userId,
-                        final Map<String, String> params) {
+                         @PathParam("userId") long userId,
+                         final Map<String, String> params) {
         final Group group = groupDAO.getById(groupId);
         final String password = params.get("password");
-        if( group == null) {
+        if (group == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         final AppUser appUser = appUserDAO.getById(userId);
-        if( appUser == null) {
+        if (appUser == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        if(!password.equals(group.getPassword())) {
+        if (!password.equals(group.getPassword()) ||
+                scuntContextProvider.get().getAppUser().getId() != appUser.getId()) {
             throw new WebApplicationException(Response.Status.FORBIDDEN);
         }
         appUser.setGroup(group);

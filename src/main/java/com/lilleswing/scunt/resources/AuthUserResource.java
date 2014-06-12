@@ -1,8 +1,8 @@
 package com.lilleswing.scunt.resources;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
-import com.lilleswing.scunt.core.AppUser;
 import com.lilleswing.scunt.core.AuthUser;
 import com.lilleswing.scunt.db.AuthUserDAO;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -11,6 +11,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Map;
 
 @Path("/auth")
 @Produces(MediaType.APPLICATION_JSON)
@@ -49,13 +50,13 @@ public class AuthUserResource {
     @Path("/register")
     @Timed
     @UnitOfWork
-    public AppUser register(final AuthUser authUser) {
+    public AuthUser register(final AuthUser authUser) {
         final boolean exists = authUserDAO.exists(authUser.getUsername());
         if(exists) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         authUserDAO.create(authUser);
-        return authUser.getAppUser();
+        return authUser;
     }
 
     /**
@@ -65,12 +66,14 @@ public class AuthUserResource {
     @Path("/login")
     @Timed
     @UnitOfWork
-    public AuthUser login(final AuthUser authUser) {
-        final boolean exists = authUserDAO.exists(authUser.getUsername());
-        if(exists) {
+    public Map<String, Object> login(final AuthUser authUser) {
+        final AuthUser exists = authUserDAO.login(authUser);
+        if(exists == null) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
-        authUserDAO.create(authUser);
-        return authUser;
+        final Map<String, Object> returns = Maps.newHashMap();
+        returns.put("id", String.valueOf(exists.getAppUser().getId()));
+        returns.put("token", exists.getAccessToken());
+        return returns;
     }
 }

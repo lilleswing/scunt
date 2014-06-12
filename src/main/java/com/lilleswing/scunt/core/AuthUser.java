@@ -1,30 +1,34 @@
 package com.lilleswing.scunt.core;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.lilleswing.scunt.core.util.IdSerializer;
+
 import javax.persistence.*;
 
 @Entity
-@Table(name="auth_user")
+@Table(name = "auth_user")
 public class AuthUser implements DbModel {
 
     @Id
-    @Column(name="id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "auth_user_id_seq")
     @SequenceGenerator(name = "auth_user_id_seq", sequenceName = "auth_user_id_seq", allocationSize = 1)
     public long id;
 
-    @Column(name="username")
+    @Column(name = "username")
     public String username;
 
-    @Column(name="email")
+    @Column(name = "email")
     public String email;
 
-    @Column(name="password")
+    @Column(name = "password")
     public String password;
 
-    @Column(name="access_token")
+    @Column(name = "access_token")
     public String accessToken;
 
     @OneToOne(targetEntity = AppUser.class, cascade = CascadeType.ALL, mappedBy = "authUser")
+    @JsonSerialize(using = IdSerializer.class)
     public AppUser appUser;
 
     public AuthUser() {
