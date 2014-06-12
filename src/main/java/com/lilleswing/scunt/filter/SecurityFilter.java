@@ -1,5 +1,6 @@
 package com.lilleswing.scunt.filter;
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -26,6 +27,9 @@ public class SecurityFilter implements ContainerRequestFilter {
     @UnitOfWork
     public ContainerRequest filter(ContainerRequest containerRequest) {
         final String accessToken = containerRequest.getHeaderValue("Authorization");
+        if(Strings.isNullOrEmpty(accessToken)) {
+            return containerRequest;
+        }
         final AppUser appUser = authUserDAO.authorize(accessToken);
         if(appUser != null) {
             final ScuntContext scuntContext = scuntContextProvider.get();

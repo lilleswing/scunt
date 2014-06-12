@@ -1,26 +1,25 @@
 package com.lilleswing.scunt.core;
 
 
-import com.google.inject.Inject;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name="app_user")
+@Table(name = "app_user")
 public class AppUser implements DbModel {
 
     @Id
-    @Column(name="id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "app_user_id_seq")
     @SequenceGenerator(name = "app_user_id_seq", sequenceName = "app_user_id_seq", allocationSize = 1)
     private long id;
 
-    @JoinColumn(name="group_id")
+    @JoinColumn(name = "group_id")
     @ManyToOne(targetEntity = Group.class, cascade = CascadeType.ALL)
     private Group group;
 
-    @JoinColumn(name="auth_user_id")
+    @JoinColumn(name = "auth_user_id")
     @OneToOne(targetEntity = AuthUser.class, cascade = CascadeType.ALL)
     @JsonIgnore
     private AuthUser authUser;
