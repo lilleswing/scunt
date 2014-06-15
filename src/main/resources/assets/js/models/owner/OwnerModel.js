@@ -1,6 +1,6 @@
 define([
   'underscore',
-  'backbone',
+  'backbone'
 ], function(_, Backbone) {
 
   var OwnerModel = Backbone.Model.extend({

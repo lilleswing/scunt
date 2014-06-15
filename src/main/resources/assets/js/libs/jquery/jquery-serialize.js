@@ -1,9 +1,9 @@
 /*
- * Saving this code, not sure where it should go
+* Saving this code, not sure where it should go
+*/
 jQuery.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
             options.url = 'http://localhost:8080/api' + options.url;
         });
-*/
 
 jQuery.fn.serializeObject = function(){
   var arrayData, objectData;

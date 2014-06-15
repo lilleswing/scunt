@@ -7,6 +7,9 @@ define([
   'views/projects/ProjectsView',
   'views/contributors/ContributorsView'
 ], function($, _, Backbone, HomeView, ProjectsView, ContributorsView) {
+    $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
+            options.url = 'http://localhost:8080/api' + options.url;
+        });
   
   var AppRouter = Backbone.Router.extend({
     routes: {
