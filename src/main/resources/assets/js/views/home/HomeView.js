@@ -22,6 +22,15 @@ define([
               that.$el.html(compiledTemplate);
             }
         });
+        /*
+      var group = new GroupModel()
+        group.set("id", 1)
+        group.fetch({
+            success: function(group) {
+                console.error(group);
+            }
+        });
+         */
     }
   });
 
