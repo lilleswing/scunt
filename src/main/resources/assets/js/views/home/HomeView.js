@@ -15,8 +15,8 @@ define([
       $('.menu li a[href="#"]').parent().addClass('active');
       this.$el.html(homeTemplate);
 
-      var sidebarView = new SidebarView();
-      sidebarView.render();
+      //var sidebarView = new SidebarView();
+      //sidebarView.render();
  
     }
 
