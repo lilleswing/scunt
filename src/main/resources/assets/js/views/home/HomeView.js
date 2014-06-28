@@ -4,7 +4,7 @@ define([
   'backbone',
   'models/group/GroupModel',
   'collections/groups/GroupsCollection',
-  'text!templates/home/homeTemplate.html'
+  'text!templates/home/clues.html'
 ], function($, _, Backbone, GroupModel, GroupsCollection, HomeTemplate){
 
   var HomeView = Backbone.View.extend({

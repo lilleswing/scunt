@@ -24,10 +24,13 @@
       <div id="logo" >
         <h1>DC Scunt</h1>
       </div>
-      <div ng-app="directive.g+signin">
+      <div ng-controller="LoginController as loginCtrl"
+           ng-hide="scuntCtrl.isLoggedIn()">
           <google-plus-signin clientid="752638645277-5l8u251fqp36t05rbmiim475stn4jbvd"></google-plus-signin>
-          <p>^ This is a Google Plus sign-in button</p>
+          {{scuntCtrl.settings}}
+          {{$rootScope.appSettings}}
       </div>
+      <body-directive ng-show="scuntCtrl.isLoggedIn()"></body-directive>
 
       <div id="page">
       </div>
