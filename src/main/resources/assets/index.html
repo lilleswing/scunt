@@ -14,6 +14,7 @@
 
 	<meta name="viewport" content="width=device-width,initial-scale=1">
     <script type="text/javascript" src="js/libs/angular/angular.js"></script>
+    <script type="text/javascript" src="js/google-plus-signin.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
     <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -23,10 +24,15 @@
       <div id="logo" >
         <h1>DC Scunt</h1>
       </div>
+      <div ng-app="directive.g+signin">
+          <google-plus-signin clientid="752638645277-5l8u251fqp36t05rbmiim475stn4jbvd"></google-plus-signin>
+          <p>^ This is a Google Plus sign-in button</p>
+      </div>
+
       <div id="page">
-        {{ scuntCtrl.tab }}
       </div>
       <div id="footer"></div>
+        {{ scuntCtrl.settings.tab }}
       </div>
 </body>
 </html>
