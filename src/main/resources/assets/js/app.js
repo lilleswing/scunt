@@ -1,16 +1,21 @@
-// Filename: app.js
-define([
-  'jquery', 
-  'underscore', 
-  'backbone',
-  'router', // Request router.js
-], function($, _, Backbone, Router){
-  var initialize = function(){
-    // Pass in our Router module and call it's initialize function
-    Router.initialize();
-  };
+( function() {
+    var app = angular.module('scunt', []);
+    app.controller("ScuntController", function() {
+        this.settings = {
+            tab: "home"
+        };
+        this.setTab = function(newTab) {
+            this.settings.tab = newTab;
+        }
+        this.isTab = function(newTab) {
+            return this.settings.tab === newTab;
+        }
+    });
 
-  return { 
-    initialize: initialize
-  };
-});
+    app.directive("menuNavbar", function() {
+        return {
+            restrict: 'E',
+            templateUrl: "templates/menu/menuTemplate.html"
+        };
+    });
+})();
