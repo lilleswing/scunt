@@ -24,11 +24,8 @@
       <div id="logo" >
         <h1>DC Scunt</h1>
       </div>
-      <div ng-controller="LoginController as loginCtrl"
-           ng-hide="scuntCtrl.isLoggedIn()">
+      <div ng-controller="LoginController as loginCtrl" ng-hide="scuntCtrl.isLoggedIn()">
           <google-plus-signin clientid="752638645277-5l8u251fqp36t05rbmiim475stn4jbvd"></google-plus-signin>
-          {{scuntCtrl.settings}}
-          {{$rootScope.appSettings}}
       </div>
       <body-directive ng-show="scuntCtrl.isLoggedIn()"></body-directive>
 
