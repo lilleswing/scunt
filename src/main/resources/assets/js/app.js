@@ -43,5 +43,4 @@
             templateUrl: "templates/menu/menuTemplate.html"
         };
     });
-
 })();
